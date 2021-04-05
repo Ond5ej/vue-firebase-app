@@ -3,11 +3,15 @@
     app
     short
     class="navbar"
+    color="primary"
   >
     <v-toolbar-title
-      class="font-weight-medium main-title"
+      class="display-1"
     >
-      <router-link :to="'/'">
+      <router-link
+        :to="'/'"
+        class="color-app-title"
+      >
         App
       </router-link>
     </v-toolbar-title>
@@ -15,36 +19,18 @@
     <v-spacer />
 
     <v-toolbar-items class="hidden-md-and-down">
-      <v-menu offset-y>
+      <v-menu
+        :close-on-content-click="false"
+        :nudge-width="300"
+        offset-y
+      >
         <template v-slot:activator="{ on }">
-          <v-btn
-            text
-            v-on="on"
-          >
-            <v-icon>settings</v-icon>
-            Administrace
-            <v-icon>expand_more</v-icon>
+          <v-btn v-on="on">
+            Login
           </v-btn>
         </template>
-        <v-list>
-          <v-list-item :to="{ name: 'triggers' }">
-            <v-list-item-icon>
-              <v-icon>trending_up</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Triggery</v-list-item-title>
-          </v-list-item>
-          <v-list-item :to="{ name: 'providers' }">
-            <v-list-item-icon>
-              <v-icon>devices</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Zdroje dat</v-list-item-title>
-          </v-list-item>
-          <v-list-item :to="{ name: 'sensors' }">
-            <v-list-item-icon>
-              <v-icon>memory</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Senzory</v-list-item-title>
-          </v-list-item>
+        <v-list clas="pa-0">
+          <LoginForm />
         </v-list>
       </v-menu>
 
@@ -54,9 +40,7 @@
             text
             v-on="on"
           >
-            <v-icon>account_circle</v-icon>
-            testtest
-            <v-icon>expand_more</v-icon>
+            <v-icon>settings</v-icon>
           </v-btn>
         </template>
         <v-list>
@@ -84,8 +68,6 @@
         <v-icon>power_settings_new</v-icon>
       </v-btn>
     </v-toolbar-items>
-
-    <LoginForm />
   </v-app-bar>
 </template>
 <script>
@@ -95,6 +77,10 @@ export default {
   components: {
     LoginForm
 
+  },
+  data () {
+    return {
+    }
   },
   methods: {
     logout () {
@@ -108,42 +94,24 @@ export default {
 </script>
 
 <style scoped>
-.main-title {
-  color: var(--v-primary-base);
+.v-list{
+  padding:0px !important;
 }
+.color-app-title{
+  color:white !important;
+}
+
 .theme--light.v-btn,
 .theme--dark.v-btn {
   text-transform: none;
   font-size: 18px;
   border-radius: 0;
-  /*color: rgba(0, 0, 0, 0.5);*/
+  background-color: transparent;
+  box-shadow:none;
+  cursor:pointer ;
+
 }
-.tab-items .v-btn {
-  border-bottom: solid white 2px;
-}
-.tab-items .v-btn--active {
-  color: var(--v-primary-base);
-  border-color: var(--v-primary-base);
-}
-.tab-items .v-btn--active::before {
-  background-color: inherit;
-}
-.tab-items .v-btn:hover::before {
-  background-color: var(--v-primary-base);
-}
-.tab-items .v-btn:hover {
-  border-color: var(--v-primary-base);
-}
-.v-toolbar__title {
-  overflow: visible;
-}
-.v-list-item__action {
-  min-width: inherit;
-  margin: 0;
-}
-.v-btn .v-chip {
-  cursor: inherit;
-}
+
 .v-application a {
   text-decoration: none;
 }

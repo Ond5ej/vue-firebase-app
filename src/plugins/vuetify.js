@@ -15,7 +15,6 @@ export default new Vuetify({
         primary: '#2f96ff'
       },
       dark: {
-        /* primary: colors.blue.lighten3, */
         primary: '#2f96ff',
         background: colors.indigo.base
       }

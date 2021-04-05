@@ -40,11 +40,15 @@
 <script>
 
 export default {
-  name: 'Profil',
+  name: 'Profile',
   data () {
     return {
       selectedTheme: this.$vuetify.theme.dark ? 'tmavý režim' : 'světlý režim'
     }
+  },
+
+  mounted () {
+    alert(1)
   },
   methods: {
     darkMode () {

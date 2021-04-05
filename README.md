@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # vue-firebase-app
 
 ## Project setup
@@ -27,3 +28,6 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+# vue-firebase-app
+>>>>>>> 0ce1688bfc0b95434c1e2f7936def535f4be4a49

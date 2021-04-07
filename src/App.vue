@@ -1,20 +1,22 @@
 <template>
   <v-app>
     <Navbar />
-    <Registration />
+    <v-main>
+      <Home />
+    </v-main>
   </v-app>
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
-import Registration from './components/Registration.vue'
+import Navbar from './components/Navbar'
+import Home from './views/Home'
 
 export default {
   name: 'App',
 
   components: {
     Navbar,
-    Registration
+    Home
   },
 
   data: () => ({

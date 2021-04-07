@@ -19,50 +19,82 @@
     <v-spacer />
 
     <v-toolbar-items class="hidden-md-and-down">
+      <!-- REGISTR & LOGIN FORM -->
+      <v-dialog
+        v-if="!isUserAuth"
+        v-model="dialogRegistration"
+        persistent
+        max-width="400px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-bind="attrs"
+            v-on="on"
+            @click="formRegistration=true"
+          >
+            Registration
+          </v-btn>
+        </template>
+
+        <Registration
+          v-if="formRegistration"
+          @closeForm="closeForm"
+          @changeForm="changeForm"
+        />
+        <Login
+          v-if="!formRegistration"
+          :with-close-btn="true"
+          @closeForm="closeForm"
+          @changeForm="changeForm"
+        />
+      </v-dialog>
+
+      <!-- LOGIN FORM -->
       <v-menu
+        v-if="!isUserAuth"
         :close-on-content-click="false"
         :nudge-width="300"
         offset-y
       >
         <template v-slot:activator="{ on }">
           <v-btn v-on="on">
-            Login
+            Log in
           </v-btn>
         </template>
-        <v-list clas="pa-0">
-          <LoginForm />
+        <v-list class="pa-0">
+          <Login />
         </v-list>
       </v-menu>
 
-      <v-menu offset-y>
+      <!-- EMAIL PRIHLASENEHO UZIVATELE -->
+      <p
+        v-if="isUserAuth"
+        class="subtitle-1 mt-4 mr-5"
+      >
+        {{ getUser.email }}
+      </p>
+
+      <!-- SETTINGS & LOGOUT -->
+      <v-menu
+        v-if="isUserAuth"
+        offset-y
+      >
         <template v-slot:activator="{ on }">
           <v-btn
-            text
+            title="Settings"
             v-on="on"
           >
             <v-icon>settings</v-icon>
           </v-btn>
         </template>
-        <v-list>
-          <v-list-item
-            :to="{ name: 'profile' }"
-            @click.prevent=""
-          >
-            <v-list-item-icon>
-              <v-icon>face</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Profil</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click.prevent="logout">
-            <v-list-item-icon>
-              <v-icon>power_settings_new</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Odhlásit</v-list-item-title>
-          </v-list-item>
+        <v-list class="pa-0">
+          <Profile />
         </v-list>
       </v-menu>
       <v-btn
+        v-if="isUserAuth"
         icon
+        title="Log out"
         @click.prevent="logout"
       >
         <v-icon>power_settings_new</v-icon>
@@ -71,23 +103,41 @@
   </v-app-bar>
 </template>
 <script>
-import LoginForm from './LoginForm'
+import Login from './Login'
+import Registration from './Registration'
+import Profile from './Profile'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'Navbar',
   components: {
-    LoginForm
+    Login,
+    Registration,
+    Profile
 
   },
   data () {
     return {
+      dialogRegistration: false,
+      formRegistration: true
     }
   },
+  computed: {
+    ...mapGetters(['getUser', 'isUserAuth'])
+  },
   methods: {
+    ...mapActions(['signOutAction']),
     logout () {
-      this.$emit('logout')
+      this.signOutAction()
     },
     reloadPage () {
       location.reload()
+    },
+    closeForm () {
+      this.dialogRegistration = false
+    },
+    changeForm () {
+      this.formRegistration = !this.formRegistration
     }
   }
 }
@@ -115,4 +165,5 @@ export default {
 .v-application a {
   text-decoration: none;
 }
+
 </style>

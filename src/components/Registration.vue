@@ -1,79 +1,141 @@
 <template>
-  <v-main>
-    <v-card
-      width="400"
-      class="mx-auto mt-5"
-    >
-      <v-card-title class="justify-center">
-        <h1 class="display-1">
-          Registration
-        </h1>
-      </v-card-title>
-      <v-card-text>
-        <v-form
-          v-model="validForm"
-          method="post"
-          action="/form"
-          autocomplete="off"
+  <v-card
+    width="400"
+    class="mx-auto"
+  >
+    <v-card-title class="justify-center">
+      <h1 class="display-1 mt-4">
+        Registration
+      </h1>
+
+      <v-btn
+        x-small
+        fab
+        class="close-btn"
+        @click="dialogClose"
+      >
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-card-title>
+    <v-card-text class="mt-2">
+      <v-form @submit.prevent>
+        <v-text-field
+          v-model="authorization.email"
+          type="text"
+          label="E-mail"
+          prepend-icon="mdi-account-circle"
+          required
+        />
+        <v-text-field
+          v-model="authorization.password"
+          label="Password"
+          :type="showPassword ? 'text' : 'password'"
+          autocomplete="new-password"
+          prepend-icon="mdi-lock"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          required
+          @click:append="showPassword=!showPassword"
+        />
+        <v-text-field
+          v-model="authorization.passwordRepeat"
+          label="Confirm password"
+          :type="showPasswordVerification ? 'text' : 'password'"
+          autocomplete="new-password"
+          prepend-icon="mdi-lock"
+          :append-icon="showPasswordVerification ? 'mdi-eye' : 'mdi-eye-off'"
+          required
+          @click:append="showPasswordVerification=!showPasswordVerification"
+        />
+        <v-btn
+          large
+          class="mt-3"
+          block
+          color="success"
+          @click="validate"
         >
-          <v-text-field
-            ref="login"
-            v-model="authorization.login"
-            type="text"
-            label="E-mail"
-            prepend-icon="mdi-account-circle"
-            required
-          />
-          <v-text-field
-            v-model="authorization.password"
-            label="Password"
-            :type="showPassword ? 'text' : 'password'"
-            autocomplete="new-password"
-            prepend-icon="mdi-lock"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            required
-            @click:append="showPassword=!showPassword"
-          />
-          <v-text-field
-            v-model="authorization.passwordCheck"
-            label="Password verification"
-            :type="showPasswordVerification ? 'text' : 'password'"
-            autocomplete="new-password"
-            prepend-icon="mdi-lock"
-            :append-icon="showPasswordVerification ? 'mdi-eye' : 'mdi-eye-off'"
-            required
-            @click:append="showPasswordVerification=!showPasswordVerification"
-          />
-        </v-form>
-      </v-card-text>
-      <v-card-actions class="justify-center">
-        <v-btn color="success">
-          Registration
+          Registr
         </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-main>
+        <p v-if="errors">
+          {{ errors }}
+        </p>
+
+        <v-btn
+          class="mt-7"
+          text
+          block
+          @click="changeForm"
+        >
+          I am already registered
+        </v-btn>
+      </v-form>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'LoginForm',
   data: () => ({
     showPassword: false,
     showPasswordVerification: false,
+    errors: undefined,
+    validationErrors: [],
     authorization: {
       password: '',
-      passwordCheck: '',
-      login: ''
-
+      passwordRepeat: '',
+      email: ''
     },
     validForm: false
   }),
+  computed: {
+    ...mapGetters(['getUser', 'isUserAuth'])
+  },
   methods: {
-    submit () {
-      alert(this.authorization.login)
-      alert(this.validForm)
+    ...mapActions(['signUpAction']),
+
+    dialogClose () {
+      this.$emit('closeForm', true)
+    },
+    changeForm () {
+      this.$emit('changeForm')
+    },
+    resetError () {
+      this.validationErrors = []
+    },
+    validate () {
+      // Clear the errors before we validate again
+      this.resetError()
+
+      // email validation
+      if (!this.authorization.email) {
+        this.validationErrors.push('<strong>E-mail</strong> cannot be empty.')
+      }
+      if (/.+@.+/.test(this.authorization.email) !== true) {
+        this.validationErrors.push('<strong>E-mail</strong> must be valid.')
+      }
+      // password validation
+      if (!this.authorization.password) {
+        this.validationErrors.push('<strong>Password</strong> cannot be empty')
+      }
+      if (/.{6,}/.test(this.authorization.password) !== true) {
+        this.validationErrors.push(
+          '<strong>Password</strong> must be at least 6 characters long'
+        )
+      }
+      if (!(this.authorization.password === this.authorization.passwordRepeat)) {
+        this.validationErrors.push('<strong>Passwords</strong> did not match')
+      }
+
+      // when valid then sign in
+      if (this.validationErrors.length <= 0) {
+        this.registration()
+      }
+    },
+
+    registration () {
+      this.signUpAction({ email: this.authorization.email, password: this.authorization.password })
     }
   }
 
@@ -81,9 +143,9 @@ export default {
 </script>
 
 <style scoped>
-
-.my-text-style >>> .v-input__slot {
-    color: red !important;
-    background-color:green !important;
+.close-btn{
+  position:absolute;
+  top:10px;
+  right:10px;
 }
 </style>

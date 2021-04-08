@@ -17,6 +17,13 @@ export default {
     },
     getError (state) {
       return state.error
+    },
+    formatPrice (price) {
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      })
+      return formatter.format(price)
     }
   },
   mutations: {
@@ -26,6 +33,7 @@ export default {
     setError (state, payload) {
       state.error = payload
     }
+
   },
   actions: {
     authAction ({ commit }) {

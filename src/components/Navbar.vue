@@ -18,7 +18,7 @@
 
     <v-spacer />
 
-    <v-toolbar-items class="hidden-md-and-down">
+    <v-toolbar-items>
       <!-- REGISTR & LOGIN FORM -->
       <v-dialog
         v-if="!isUserAuth"
@@ -49,6 +49,11 @@
         />
       </v-dialog>
 
+      <v-divider
+        v-if="!isUserAuth"
+        vertical
+      />
+
       <!-- LOGIN FORM -->
       <v-menu
         v-if="!isUserAuth"
@@ -73,6 +78,10 @@
       >
         {{ getUser.email }}
       </p>
+      <v-divider
+        v-if="isUserAuth"
+        vertical
+      />
 
       <!-- SETTINGS & LOGOUT -->
       <v-menu
@@ -91,8 +100,16 @@
           <Profile />
         </v-list>
       </v-menu>
+
+      <v-divider
+        v-if="isUserAuth"
+        vertical
+      />
+
       <v-btn
         v-if="isUserAuth"
+        style="min-width: 64px"
+        right
         icon
         title="Log out"
         @click.prevent="logout"
@@ -106,6 +123,7 @@
 import Login from './Login'
 import Registration from './Registration'
 import Profile from './Profile'
+
 import { mapGetters, mapActions } from 'vuex'
 
 export default {

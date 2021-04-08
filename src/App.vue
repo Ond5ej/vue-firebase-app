@@ -1,22 +1,26 @@
 <template>
-  <v-app>
+  <v-app app>
     <Navbar />
     <v-main>
-      <Home />
+      <CategoriesBar />
+
+      <TableOfProducts />
     </v-main>
   </v-app>
 </template>
 
 <script>
 import Navbar from './components/Navbar'
-import Home from './views/Home'
+import CategoriesBar from './components/CategoriesBar'
+import TableOfProducts from './components/TableOfProducts'
 
 export default {
   name: 'App',
 
   components: {
     Navbar,
-    Home
+    CategoriesBar,
+    TableOfProducts
   },
 
   data: () => ({

@@ -13,7 +13,15 @@ export default new Vuetify({
     },
     themes: {
       light: {
-        primary: '#2f96ff'
+        primary: '#2f96ff',
+        secondary: '#424242',
+        electronics: '#87CEFA', // LightSkyBlue
+        toys: '#FFA500', // Orange
+        sport: '#32CD32', // LimeGreen
+        drugstore: '#FFC0CB', // Pink
+        books: '#A52A2A', // Brown
+        cars: '#00008B', // DarkBlue
+        pets: '#C0C0C0' // Silver
       },
       dark: {
         primary: '#2f96ff',

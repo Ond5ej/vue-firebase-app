@@ -9,7 +9,7 @@ export default {
   getters: {
     total: state => {
       if (state.inCart.length > 0) {
-        return state.inCart.map(item => item.price).reduce((total, amount) => total + amount)
+        return state.inCart.map(item => (item.price * item.quantity)).reduce((total, amount) => total + amount)
       } else {
         return 0
       }
@@ -20,9 +20,16 @@ export default {
 
   },
   mutations: {
-    ADD_TO_CART (state, invId) {
-      state.inCart.push(invId)
-      console.log(state.inCart)
+    ADD_TO_CART (state, product) {
+      const index = state.inCart.findIndex(obj => obj.id === product.id)
+      // kosik uz obsahuje tento produkt
+
+      if (index > -1) {
+        state.inCart[index].quantity++
+      } else {
+        product = { ...product, quantity: 1 }
+        state.inCart.push(product)
+      }
     },
     REMOVE_FROM_CART (state, index) {
       state.inCart.splice(index, 1)
@@ -34,7 +41,7 @@ export default {
   },
   actions: {
     addToCart ({ commit }, payload) {
-      console.log(payload)
+      alert('do kosiku')
       commit('ADD_TO_CART', payload)
     },
     removeFromCart ({ commit }, payload) {

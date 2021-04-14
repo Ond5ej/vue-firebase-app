@@ -14,3 +14,36 @@
         background: transparent;
     }
 }
+
+.v-tabs-slider-wrapper, 
+.v-tab--active.tab-electronics {
+  background-color: var(--v-electronics-base) !important;
+}
+.v-tabs-slider-wrapper, 
+.v-tab--active.tab-toys {
+  background-color: var(--v-toys-base)!important;
+}
+.v-tabs-slider-wrapper, 
+.v-tab--active.tab-sports {
+  background-color: var(--v-sport-base) !important;
+}
+.v-tabs-slider-wrapper, 
+.v-tab--active.tab-drugstore {
+  background-color: var(--v-drugstore-base) !important;
+}
+.v-tabs-slider-wrapper, 
+.v-tab--active.tab-books {
+  background-color: var(--v-books-base) !important;
+}
+.v-tabs-slider-wrapper, 
+.v-tab--active.tab-cars {
+  background-color: var(--v-cars-base) !important;
+}
+.v-tabs-slider-wrapper, 
+.v-tab--active.tab-pets {
+  background-color: var(--v-pets-base) !important;
+}
+.v-tabs-slider-wrapper, 
+.v-tab--active{
+  color:white !important;
+}

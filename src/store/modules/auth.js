@@ -46,7 +46,6 @@ export default {
       })
     },
     signUpAction ({ commit }, payload) {
-      console.log(payload)
       auth
         .createUserWithEmailAndPassword(payload.email, payload.password).then(() => {
           const createdUser = auth.currentUser

@@ -55,6 +55,12 @@ export default [
     component: Dashboard
   },
 
+  {
+    path: '/electronics/*',
+    name: 'electronics/',
+    component: Dashboard
+  },
+
   // Tohle musi byt vzdy posledni - je to fallback pro pripad, ze cesta nesedi do zadne predchozi
   {
     path: '*',

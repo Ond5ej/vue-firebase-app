@@ -3,16 +3,20 @@
     width="100%"
   >
     <v-list class="pa-0">
-      <v-list-item-group v-model="selectedCategory">
+      <v-list-item-group>
         <template
           v-for="(item, index) in navLinks"
         >
           <v-list-item
             :key="index"
+            :to="'/'+getCategory+'/'+index"
             :value="item.text"
+            class="pl-6"
+            :active-class="getCategory + ' list-item-category list-item-' + getCategory + ' text--accent-4'"
 
-            :active-class="getCategory + ' list-item-category list-item-'+getCategory + ' text--accent-4'"
+            @change="storeSubCategory(index)"
           >
+            <!--  -->
             <template>
               <v-list-item-content>
                 <v-list-item-title v-text="item.text" />
@@ -25,7 +29,11 @@
               </v-list-item-action>
             </template>
           </v-list-item>
-          <v-divider :key="`divider-${index}`" />
+          <v-divider
+            :key="`divider-${index}`"
+            :class="getCategory"
+            style="max-height:2px !important; height:2px;"
+          />
         </template>
       </v-list-item-group>
     </v-list>
@@ -33,63 +41,47 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+import { firestore } from '../../firebase'
 
 export default {
   name: 'CategoriesLeft',
   data () {
     return {
-      selectedCategory: undefined,
-      navLinks: [
-        {
-          text: 'Mobile Phones',
-          route: '/mobile_phones'
-        },
-        {
-          text: 'Computers',
-          route: '/computers'
-        },
-        {
-          text: 'Laptops and Tablets',
-          route: '/laptops_tablets'
-        },
-        {
-          text: 'Monitors',
-          route: '/monitors'
-        },
-        {
-          text: 'Hardware',
-          route: '/hardware'
-        },
-        {
-          text: 'Televisions',
-          route: '/televisions'
-        },
-        {
-          text: 'Photo Audio Video',
-          route: '/photo_audio_video'
-        },
-        {
-          text: 'Home Appliances',
-          route: '/home_appliances'
-        },
-        {
-          text: 'Appliances',
-          route: '/appliances'
-        },
-        {
-          text: 'Health & Beauty',
-          route: '/health_beauty'
-        },
-        {
-          text: 'Printers & Office',
-          route: '/printers_office'
-        }
-      ]
+      navLinks: []
     }
   },
   computed: {
     ...mapGetters(['getCategory'])
+  },
+  watch: {
+    getCategory () {
+      this.getSubCategory()
+    }
+  },
+  mounted () {
+    this.getSubCategory()
+  },
+  methods: {
+    ...mapMutations(['setSubCategory']),
+    getSubCategory () {
+      if (this.getCategory === 0) return 0
+      this.navLinks = []
+      firestore.collection('sub-category').doc(this.getCategory).get().then((doc) => {
+        if (doc.exists) {
+          this.navLinks = doc.data()
+        } else {
+        // doc.data() will be undefined in this case
+          console.log('No such sub-category document!')
+        }
+      }).catch((error) => {
+        console.log('Error getting sub-category document:', error)
+      })
+    },
+    storeSubCategory (index) {
+      localStorage.setItem('subCategory', index)
+      this.setSubCategory(index)
+    }
   }
 
 }
@@ -97,25 +89,21 @@ export default {
 </script>
 
 <style scope>
-.list-item-category.v-list-item--active{
-
-}
-
 .list-item-electronics.v-list-item--active {
-  color:black !important;
-  background-color: rgba(0, 191, 255,1) !important;
+  color:white !important;
+  /*background-color: rgba(0, 191, 255,1) !important;*/
 }
 .list-item-toys.v-list-item--active {
-  color:black !important;
-  background-color:rgba(255, 165, 0, 0.4) !important;
+  color:white !important;
+  /*background-color:rgba(255, 165, 0, 0.4) !important;*/
 }
 .list-item-sport.v-list-item--active {
-  color:black !important;
-  background-color:rgba(0, 128, 0, 0.4) !important;
+  color:white !important;
+  /*background-color:rgba(0, 128, 0, 0.4) !important;*/
 }
 .list-item-drugstore.v-list-item--active {
-  color:black !important;
-  background-color:rgba(255, 192, 203, 0.4) !important;
+  color:white !important;
+  /*background-color:rgba(255, 192, 203, 0.4) !important;*/
 }
 .list-item-books.v-list-item--active {
   color:white !important;
@@ -126,6 +114,7 @@ export default {
 
 }
 .list-item-pets.v-list-item--active {
-  color:black !important;
+  color:white !important;
 }
+
 </style>

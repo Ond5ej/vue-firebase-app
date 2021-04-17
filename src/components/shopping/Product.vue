@@ -12,13 +12,16 @@
     </template>
 
     <!-- IMAGE -->
-    <v-img
-      v-if="productData.img"
-      height="250"
-      :src="imagePath"
-    />
+    <div style="height:250px !important; padding:10px 30px 10px 30px !important;">
+      <v-img
+        v-if="productData.img"
 
-    <!-- RATING -->
+        style="min-width: 100%; height: auto;"
+        :src="imagePath"
+      />
+    </div>
+
+    <!-- RATING FAVOR4ITE LIBRA -->
     <v-card-text>
       <v-row
         align="center"
@@ -38,9 +41,7 @@
         >
           <v-icon>fas fa-balance-scale-right</v-icon>
         </v-btn>
-
         <v-spacer />
-        <!--  RATING -->
         <v-rating
           :value="productData.rating"
           color="amber"
@@ -51,26 +52,26 @@
         />
 
         <div class="grey--text ml-2">
-          {{ productData.rating }} (413)
+          {{ productData.rating }} (0)
         </div>
       </v-row>
     </v-card-text>
     <v-divider class="mx-4" />
+    <div style="height:275px;">
+      <v-card-title
+        v-if="productData.brand || productData.modelName"
+        class="pt-2 pb-2 brand-font"
+      >
+        {{ productData.brand }}
+        {{ productData.modelName }}
+      </v-card-title>
 
-    <v-card-title
-      v-if="productData.brand || productData.modelName"
-      class="pt-2 pb-2 brand-font"
-    >
-      {{ productData.brand }}
-      {{ productData.modelName }}
-    </v-card-title>
-
-    <v-card-text>
-      <div class="product-text-height">
-        {{ productData.description }}
-      </div>
-    </v-card-text>
-
+      <v-card-text>
+        <div class="product-text-height">
+          {{ productData.description }}
+        </div>
+      </v-card-text>
+    </div>
     <v-divider class="mx-4" />
     <v-card-actions>
       <v-card-title

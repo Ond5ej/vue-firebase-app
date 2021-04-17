@@ -1,28 +1,26 @@
 <template>
   <div class="dashboard">
-    <TableOfProducts :category="category" />
+    <Home />
+    <FiltrForProducts />
+    <TableOfProducts />
   </div>
 </template>
 
 <script>
 
 import TableOfProducts from '../components/shopping/TableOfProducts'
+import Home from '../components/Home'
+import FiltrForProducts from '../components/FiltrForProducts'
 
 export default {
   name: 'Dashboard',
   components: {
-    TableOfProducts
+    TableOfProducts,
+    Home,
+    FiltrForProducts
   },
-
   data () {
-    return {
-      category: this.$route.name
-    }
-  },
-  watch: {
-    '$route' (to, from) {
-      this.category = to.name
-    }
+    return {}
   }
 }
 </script>

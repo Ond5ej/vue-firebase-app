@@ -4,6 +4,7 @@
     clipped-left
     class="navbar"
     color="primary"
+    height="75"
   >
     <v-toolbar-title
       class="display-1"
@@ -24,6 +25,20 @@
       Add product
     </v-btn>
 
+    <v-spacer />
+    <v-icon x-large>
+      search
+    </v-icon>
+    <v-autocomplete
+      auto-select-first
+      clearable
+      deletable-chips
+      dense
+      filled
+      solo
+      placeholder="Type for search"
+      class="mt-6 ml-5"
+    />
     <v-spacer />
 
     <v-toolbar-items>

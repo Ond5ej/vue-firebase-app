@@ -7,7 +7,7 @@
         >
           <v-select
             v-model="type"
-            :items="['televisions', 'processors', 'mobile_phones','refrigerators']"
+            :items="fsItems"
             label="Type"
             required
             @change="selectBluePrint"
@@ -68,19 +68,23 @@ export default {
       type: undefined,
       valid: false,
       bpData: {},
-      vModelData: {}
+      vModelData: {},
+      fsItems: []
+
     }
   },
   mounted () {
-
+    this.getSubCategory()
   },
   methods: {
     save () {
+      this.vModelData = Object.assign(this.vModelData, { type: this.type })
       console.log('2')
       console.log(this.vModelData)
 
       this.$emit('save', this.vModelData)
     },
+    // nahraje se blueprint z fire storu a podle neho se vytvori ve formulari imputy
     selectBluePrint () {
       firestore.collection('bp-electronics').doc(this.type).get().then((doc) => {
         if (doc.exists) {
@@ -96,7 +100,18 @@ export default {
       }).catch((error) => {
         console.log('Error getting document:', error)
       })
+    },
+    // dostanu vse z bp-electronics
+    getSubCategory () {
+      firestore.collection('bp-electronics').get().then((query) => {
+        query.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, ' => ', doc.data())
+          this.fsItems.push(doc.id)
+        })
+      })
     }
+
   }
 
 }

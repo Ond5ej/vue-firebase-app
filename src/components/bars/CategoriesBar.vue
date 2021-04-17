@@ -1,21 +1,24 @@
 <template>
   <v-card>
+    <!--@change="emitCategory"-->
     <v-tabs
       v-model="tab"
       icons-and-text
       centered
-      @change="emitCategory"
+      height="90"
     >
       <v-tab
-        v-for="(cat, index) in categories"
-        :key="index"
-        :to="cat.href"
+        v-for="cat in categories"
+        :key="cat.id"
+        :to="'/'+cat.id"
         class="pt-2 tab-width"
         :class="cat.class"
-        height="100"
+        @click="manualChangeCategory"
       >
         {{ cat.name }}
-        <v-icon>{{ cat.icon }}</v-icon>
+        <v-icon large>
+          {{ cat.icon }}
+        </v-icon>
       </v-tab>
     </v-tabs>
     <div
@@ -41,46 +44,47 @@ export default {
   },
   data () {
     return {
-      tab: null,
+      tab: localStorage.getItem('category'),
+
       categories: [
         {
-          href: 'electronics',
+          id: 'electronics',
           class: 'tab-electronics',
           name: 'Elektronika',
           icon: 'computer'
         },
         {
-          href: 'toys',
+          id: 'toys',
           class: 'tab-toys',
           name: 'Hračky',
           icon: 'toys'
         },
         {
-          href: 'sport',
+          id: 'sport',
           class: 'tab-sports',
           name: 'Sport',
           icon: 'fitness_center'
         },
         {
-          href: 'drugstore',
+          id: 'drugstore',
           class: 'tab-drugstore',
           name: 'Drogerie',
           icon: 'sanitizer'
         },
         {
-          href: 'books',
+          id: 'books',
           class: 'tab-books',
           name: 'Knihy',
           icon: 'menu_book'
         },
         {
-          href: 'cars',
+          id: 'cars',
           class: 'tab-cars',
           name: 'Auto-moto',
           icon: 'directions_car'
         },
         {
-          href: 'pets',
+          id: 'pets',
           class: 'tab-pets',
           name: 'Pet',
           icon: 'pets'
@@ -89,10 +93,17 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setCategory']),
+    ...mapMutations(['setCategory', 'setSubCategory']),
     emitCategory () {
-      this.setCategory(this.tab)
-      this.$emit('updateCategory', this.tab)
+      localStorage.setItem('category', this.tab.replace('/', ''))
+      this.setCategory(this.tab.replace('/', ''))
+    },
+    manualChangeCategory () {
+      alert('Manual')
+      localStorage.setItem('subCategory', '')
+      this.setSubCategory(null)
+      localStorage.setItem('category', this.tab.replace('/', ''))
+      this.setCategory(this.tab.replace('/', ''))
     }
 
   }
@@ -110,7 +121,41 @@ export default {
 }
 
 .tab-width{
-  width:10%;
+  width:10% !important;
+}
+.v-tab:hover .v-icon, .v-tab:hover {
+  color:white !important;
+}
+
+.tab-toys:hover {
+  background-color: var(--v-toys-base)!important;
+}
+
+.tab-electronics:hover {
+  background-color: var(--v-electronics-base) !important;
+}
+.tab-toys:hover {
+  background-color: var(--v-toys-base)!important;
+}
+
+.tab-sports:hover {
+  background-color: var(--v-sport-base) !important;
+}
+
+.tab-drugstore:hover {
+  background-color: var(--v-drugstore-base) !important;
+}
+
+.tab-books:hover {
+  background-color: var(--v-books-base) !important;
+}
+
+.tab-cars:hover {
+  background-color: var(--v-cars-base) !important;
+}
+
+.tab-pets:hover {
+  background-color: var(--v-pets-base) !important;
 }
 
 </style>

@@ -1,49 +1,52 @@
 <template>
-  <v-container
-    align="center"
-    class="mt-5"
+  <v-row
+    class="ma-8"
   >
-    <v-row
-      align="center"
-      justify="center"
-    >
-      <Product
-        v-for="(product, index) of products"
-        :key="index"
-        :product-data="product"
-      />
-    </v-row>
-  </v-container>
+    <Product
+      v-for="(product, index) of products"
+      :key="index"
+      :product-data="product"
+    />
+  </v-row>
 </template>
 
 <script>
 import Product from './Product'
 import { firestore } from '../../firebase'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'TableOfProducts',
   components: {
     Product
   },
-  props: {
-    category: { type: String, default: undefined }
-  },
   data () {
     return {
       products: []
     }
   },
-  computed: {},
+
+  computed: {
+    ...mapGetters(['getSubCategory', 'getCategory'])
+  },
   watch: {
-    category () {
+    getSubCategory () {
+      this.getProducts()
+    },
+
+    getCategory () {
       this.getProducts()
     }
   },
-
+  mounted () {
+    this.getProducts()
+  },
   methods: {
     getProducts () {
+      console.log('category ' + this.getCategory)
+      console.log('sub category ' + this.getSubCategory)
       this.products = []
-      firestore.collection(this.category).get().then((result) => {
+      firestore.collection(this.getCategory).where('type', '==', this.getSubCategory).get().then((result) => {
         result.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           this.products.push(doc.data())

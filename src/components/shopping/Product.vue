@@ -3,23 +3,16 @@
     max-width="310"
     class="product-card"
   >
-    <template slot="progress">
-      <v-progress-linear
-        color="deep-purple"
-        height="10"
-        indeterminate
-      />
-    </template>
-
-    <!-- IMAGE -->
-    <div style="height:250px !important; padding:10px 30px 10px 30px !important;">
-      <v-img
-        v-if="productData.img"
-
-        style="min-width: 100%; height: auto;"
-        :src="imagePath"
-      />
-    </div>
+    <!-- IMAGE
+     :to="'/detail/1'" -->
+    <router-link :to="{ name: 'detail', params: { subCategory: $route.params.subCategory, category: category, id: productData.id} }">
+      <div style="height:250px !important; padding:10px 30px 10px 30px !important;">
+        <v-img
+          v-if="productData.img"
+          :src="imagePath"
+        />
+      </div>
+    </router-link>
 
     <!-- RATING FAVOR4ITE LIBRA -->
     <v-card-text>
@@ -57,15 +50,18 @@
       </v-row>
     </v-card-text>
     <v-divider class="mx-4" />
+
+    <!-- NADPIS PRODUKTU -->
     <div style="height:275px;">
       <v-card-title
         v-if="productData.brand || productData.modelName"
+        :to="'/electronics/televisions/'+productData.id"
         class="pt-2 pb-2 brand-font"
       >
         {{ productData.brand }}
         {{ productData.modelName }}
       </v-card-title>
-
+      <!-- POPIS PRODUKTU -->
       <v-card-text>
         <div class="product-text-height">
           {{ productData.description }}
@@ -104,7 +100,8 @@ export default {
   name: 'Product',
   mixins: [priceMethods],
   props: {
-    productData: { type: Object, default: null }
+    productData: { type: Object, default: null },
+    category: { type: String, default: undefined }
   },
   data () {
     return {

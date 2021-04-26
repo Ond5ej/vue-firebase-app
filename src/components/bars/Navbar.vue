@@ -5,6 +5,7 @@
     class="navbar"
     color="primary"
     height="75"
+    style="z-index:10"
   >
     <v-toolbar-title
       class="display-1"

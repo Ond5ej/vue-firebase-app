@@ -1,8 +1,7 @@
 <template>
   <v-card>
-    <!--@change="emitCategory"-->
     <v-tabs
-      v-model="tab"
+      v-model="category"
       icons-and-text
       centered
       height="90"
@@ -11,9 +10,9 @@
         v-for="cat in categories"
         :key="cat.id"
         :to="'/'+cat.id"
+
         class="pt-2 tab-width"
         :class="cat.class"
-        @click="manualChangeCategory"
       >
         {{ cat.name }}
         <v-icon large>
@@ -22,20 +21,20 @@
       </v-tab>
     </v-tabs>
     <div
+      v-if="category"
       class="guide-line"
-      :class="tab"
+      :class="category.replace('/','')"
     />
     <div
       style="position:absolute; right:1%; top:20%"
     >
-      <ShoppingCart />
+      <ShoppingCart v-if="this.$route.matched[0].name!=='cart'" />
     </div>
   </v-card>
 </template>
 
 <script>
 import ShoppingCart from '../shopping/ShoppingCart'
-import { mapMutations } from 'vuex'
 
 export default {
   name: 'CategoriesBar',
@@ -44,7 +43,7 @@ export default {
   },
   data () {
     return {
-      tab: localStorage.getItem('category'),
+      category: undefined,
 
       categories: [
         {
@@ -91,22 +90,8 @@ export default {
         }
       ]
     }
-  },
-  methods: {
-    ...mapMutations(['setCategory', 'setSubCategory']),
-    emitCategory () {
-      localStorage.setItem('category', this.tab.replace('/', ''))
-      this.setCategory(this.tab.replace('/', ''))
-    },
-    manualChangeCategory () {
-      alert('Manual')
-      localStorage.setItem('subCategory', '')
-      this.setSubCategory(null)
-      localStorage.setItem('category', this.tab.replace('/', ''))
-      this.setCategory(this.tab.replace('/', ''))
-    }
-
   }
+
 }
 </script>
 

@@ -2,6 +2,7 @@ import Dashboard from '@/views/Dashboard'
 import AddNewProduct from '@/views/AddNewProduct'
 import ShoppingCartCheckout from '@/views/ShoppingCartCheckout'
 import NotFound from '@/views/NotFound'
+// import ProductDetail from '@/components/shopping/ProductDetail'
 
 export default [
   {
@@ -20,45 +21,88 @@ export default [
     component: AddNewProduct
   },
   {
-    path: '/electronics',
+    path: '/:category/:subCategory?',
     name: 'electronics',
-    component: Dashboard
+    component: Dashboard,
+    children: [
+      {
+        path: '/:category/detail/:id',
+        name: 'detail',
+        component: Dashboard
+      }
+    ]
   },
   {
-    path: '/toys',
+    path: '/:category/:subCategory?',
     name: 'toys',
-    component: Dashboard
+    component: Dashboard,
+    children: [
+      {
+        path: '/:category/detail/:id',
+        name: 'detail',
+        component: Dashboard
+      }
+    ]
   },
   {
-    path: '/sport',
+    path: '/:category/:subCategory?',
     name: 'sport',
-    component: Dashboard
+    component: Dashboard,
+    children: [
+      {
+        path: '/:category/detail/:id',
+        name: 'detail',
+        component: Dashboard
+      }
+    ]
   },
   {
-    path: '/drugstore',
+    path: '/:category/:subCategory?',
     name: 'drugstore',
-    component: Dashboard
+    component: Dashboard,
+    children: [
+      {
+        path: '/:category/detail/:id',
+        name: 'detail',
+        component: Dashboard
+      }
+    ]
   },
   {
-    path: '/books',
+    path: '/:category/:subCategory?',
     name: 'books',
-    component: Dashboard
+    component: Dashboard,
+    children: [
+      {
+        path: '/:category/detail/:id',
+        name: 'detail',
+        component: Dashboard
+      }
+    ]
   },
   {
-    path: '/cars',
+    path: '/:category/:subCategory?',
     name: 'cars',
-    component: Dashboard
+    component: Dashboard,
+    children: [
+      {
+        path: '/:category/detail/:id',
+        name: 'detail',
+        component: Dashboard
+      }
+    ]
   },
   {
-    path: '/pets',
+    path: '/:category/:subCategory?',
     name: 'pets',
-    component: Dashboard
-  },
-
-  {
-    path: '/electronics/*',
-    name: 'electronics/',
-    component: Dashboard
+    component: Dashboard,
+    children: [
+      {
+        path: '/:category/detail/:id',
+        name: 'detail',
+        component: Dashboard
+      }
+    ]
   },
 
   // Tohle musi byt vzdy posledni - je to fallback pro pripad, ze cesta nesedi do zadne predchozi

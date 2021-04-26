@@ -1,75 +1,120 @@
+
 <template>
-  <v-navigation-drawer
-    width="100%"
-  >
-    <v-list class="pa-0">
-      <v-list-item-group>
-        <template
-          v-for="(item, index) in navLinks"
+  <div style="max-width:300px;">
+    <v-menu
+      v-for="item in navLinks"
+      :key="item.key"
+      :close-on-content-click="false"
+      open-on-hover
+      offset-x
+    >
+      <template v-slot:activator="{ on }">
+        <v-btn
+          style="min-width:300px; min-height:55px;"
+          :style="'border:1px solid var(--v-' + category + '-base) !important;'"
+          class="pl-9 pr-6 "
+          :to="{ name: category, params: { subCategory: item.key, category: category } }"
+          text
+          tile
+          v-on="on"
         >
-          <v-list-item
-            :key="index"
-            :to="'/'+getCategory+'/'+index"
-            :value="item.text"
-            class="pl-6"
-            :active-class="getCategory + ' list-item-category list-item-' + getCategory + ' text--accent-4'"
-
-            @change="storeSubCategory(index)"
-          >
-            <!--  -->
-            <template>
-              <v-list-item-content>
-                <v-list-item-title v-text="item.text" />
-              </v-list-item-content>
-
-              <v-list-item-action>
-                <v-icon small>
-                  arrow_forward_ios
-                </v-icon>
-              </v-list-item-action>
-            </template>
-          </v-list-item>
-          <v-divider
-            :key="`divider-${index}`"
-            :class="getCategory"
-            style="max-height:2px !important; height:2px;"
-          />
-        </template>
-      </v-list-item-group>
-    </v-list>
-  </v-navigation-drawer>
+          {{ item.text }}
+          <v-spacer />
+          <v-icon small>
+            arrow_forward_ios
+          </v-icon>
+        </v-btn>
+      </template>
+      <!-- SUBCATEGORY ++ -->
+      <v-card
+        style="width:600px; height:400px;"
+        :style="'border:1px solid var(--v-' + category + '-base) !important;'"
+      >
+        <v-row
+          v-for="(filtr, index) in specificCategories[item.key]"
+          :key="index"
+          align="center"
+          justify="center"
+        >
+          <v-col>
+            {{ filtr.text }}
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-menu>
+  </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
 import { firestore } from '../../firebase'
 
 export default {
   name: 'CategoriesLeft',
+  props: {
+    category: { type: String, default: undefined }
+  },
   data () {
     return {
-      navLinks: []
+      navLinks: [],
+      subCategory: this.$route.params.subCategory,
+      hover: false,
+
+      specificCategories: {
+
+        televisions: [
+          {
+            text: 'Accessories'
+
+          },
+          {
+            text: 'QLED'
+          },
+          {
+            text: 'OLED'
+          }
+        ],
+        appliances: [
+          {
+            text: 'Accessories'
+
+          },
+          {
+            text: 'Coffie'
+          },
+          {
+            text: 'Vaccum'
+          }
+        ]
+      }
     }
   },
-  computed: {
-    ...mapGetters(['getCategory'])
-  },
+
   watch: {
-    getCategory () {
-      this.getSubCategory()
+    category () {
+      this.getListOfSubCategory()
     }
   },
+
   mounted () {
-    this.getSubCategory()
+    this.getListOfSubCategory()
   },
   methods: {
-    ...mapMutations(['setSubCategory']),
-    getSubCategory () {
-      if (this.getCategory === 0) return 0
+
+    getListOfSubCategory () {
+      if (this.category === 0) return 0
       this.navLinks = []
-      firestore.collection('sub-category').doc(this.getCategory).get().then((doc) => {
+      firestore.collection('sub-category').doc(this.category).get().then((doc) => {
         if (doc.exists) {
-          this.navLinks = doc.data()
+          // razeni objektu z dotazu
+          const ordered = Object.keys(doc.data()).sort().reduce(
+            (obj, key) => {
+              obj[key] = { ...doc.data()[key], ...{ key: key } }
+              return obj
+            },
+            {}
+          )
+
+          this.navLinks = ordered
         } else {
         // doc.data() will be undefined in this case
           console.log('No such sub-category document!')
@@ -77,10 +122,6 @@ export default {
       }).catch((error) => {
         console.log('Error getting sub-category document:', error)
       })
-    },
-    storeSubCategory (index) {
-      localStorage.setItem('subCategory', index)
-      this.setSubCategory(index)
     }
   }
 
@@ -115,6 +156,14 @@ export default {
 }
 .list-item-pets.v-list-item--active {
   color:white !important;
+}
+
+.list-item-category{
+  border-bottom: 2px solid red !important;
+}
+
+.menu_able_content{
+
 }
 
 </style>

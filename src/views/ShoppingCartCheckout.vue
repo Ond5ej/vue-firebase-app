@@ -40,14 +40,16 @@
     </v-card-title>
 
     <v-divider />
+
     <v-card-text>
-      <v-spacer />
       <v-row
         v-for="(product, index) in cartContents"
         :key="index"
-        class="pb-1"
-        style=" "
+        class="pb-1 pl-10"
+        align="center"
+        justify="center"
       >
+        <v-col cols="3" />
         <!-- IMAGE -->
         <v-col
           cols="1"
@@ -58,43 +60,31 @@
             v-if="product.img"
             height="75"
             width="75"
-
-            :src="imagePath"
+            :src="getImage(product.img)"
           />
         </v-col>
         <!-- NAME -->
-        <v-col>
+        <v-col cols="2">
           <span v-if="product">{{ product.brand }} - {{ product.modelName }}</span>
           <span v-else>&ndash;</span>
         </v-col>
         <!-- QUANTITY -->
         <v-col
           cols="1"
-          style="display:inline-block"
         >
-          <div style="position:relative">
-            <v-text-field
-              v-model="product.quantity"
-              type="text"
-              outlined
-              dense
-              label="Quantity"
-              class="centered-input"
-              style="max-width:75px; display:inline-block"
-            />
-
-            <div
-              class="arrow_drop arrow_drop_up"
-              @click="increment(index)"
-            />
-            <div
-              class="arrow_drop arrow_drop_down"
-              @click="decrement(index)"
-            />
-          </div>
+          <v-text-field
+            v-model="product.quantity"
+            type="number"
+            min="1"
+            outlined
+            dense
+            label="Quantity"
+            class="centered-input pa-0"
+            style="max-width:75px; position:relative; top:5px;"
+          />
         </v-col>
         <!-- PRICE -->
-        <v-col cols="2">
+        <v-col cols="1">
           <span
             v-if="product"
             class="text-lg-h6"
@@ -111,28 +101,31 @@
             <v-icon>clear</v-icon>
           </v-btn>
         </v-col>
+        <v-col cols="3" />
       </v-row>
-
-      <v-spacer />
     </v-card-text>
 
     <v-divider class="mb-3" />
     <!-- SUMMARY -->
     <v-row>
+      <v-col cols="3" />
+      <v-col
+        cols="1"
+      />
+      <v-col cols="2" />
       <v-col cols="1" />
-      <v-col />
-      <v-col />
-      <v-col>
+      <v-col cols="1">
         <span
           v-if="total"
           class="totalPrice text-lg-h6"
         >{{ formatPrice(total) }}</span>
         <span v-else>&ndash;</span>
       </v-col>
-      <v-col>
+      <v-col cols="1">
         <v-btn
           color="success"
           icon-text
+          right
         >
           Continue
           <v-icon>
@@ -140,6 +133,7 @@
           </v-icon>
         </v-btn>
       </v-col>
+      <v-col cols="3" />
     </v-row>
   </v-card>
 </template>
@@ -155,17 +149,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['cartContents', 'total']),
-    imagePath () {
-      var images = require.context('@/assets/', false, /\.jpg$/)
-      let productImage = ''
-      try {
-        productImage = images(`./${this.product.img}`)
-      } catch (error) {
-        productImage = images('./book.jpg')
-      }
-      return productImage
-    }
+    ...mapGetters(['cartContents', 'total'])
   },
   methods: {
     ...mapActions(['removeFromCart']),
@@ -177,12 +161,15 @@ export default {
     removeProduct (product) {
       this.removeFromCart(product)
     },
-
-    increment (index) {
-      this.cartContents[index].quantity = parseInt(this.cartContents[index].quantity) + 1
-    },
-    decrement (index) {
-      this.cartContents[index].quantity = (parseInt(this.cartContents[index].quantity) <= 1) ? 1 : parseInt(this.cartContents[index].quantity) - 1
+    getImage (path) {
+      var images = require.context('@/assets/', false, /\.jpg$/)
+      let productImage = ''
+      try {
+        productImage = images('./' + path)
+      } catch (error) {
+        productImage = images('./book.jpg')
+      }
+      return productImage
     }
   }
 
@@ -195,31 +182,10 @@ export default {
 .centered-input >>> input {
   text-align: center
 }
-
-.arrow_drop{
-  position: absolute;
-  cursor: pointer;
-  width: 0;
-  height: 0;
-  border-style: solid;
+.v-text-field__details{
+  margin-bottom: 0px !important;
 }
-.arrow_drop_down {
-  top: 22px;
-  left: 81px;
-  border-width: 15px 8px 0 8px;
-  border-color: #00000061 transparent transparent transparent;
-}
-.arrow_drop_up{
-  top: 2px;
-  right: 90px;
-  border-width: 0 8px 15px 8px;
-  border-color: transparent transparent #00000061 transparent;
-}
-
-.arrow_drop_up:hover{
-  border-color: transparent transparent #00FF00 transparent;
-}
-.arrow_drop_down:hover{
-  border-color: #0000FF transparent transparent transparent;
+.v-input__control{
+  height:45px !important;
 }
 </style>
